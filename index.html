@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hour Tracker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+
+    #app {
+      text-align: center;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 350px;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    .result-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5em;
+      margin-bottom: 20px;
+    }
+
+    .result-container .dollar-sign {
+      margin-right: 5px;
+    }
+
+    .result-container .separator {
+      margin: 0 15px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 5px;
+      margin: 5px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+    }
+
+    .gx-minuto {
+      font-size: 1.2em;
+      padding: 10px;
+      background-color: #e0e0e0;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+
+    .inputs {
+      margin-bottom: 20px;
+    }
+
+    input {
+      padding: 5px;
+      font-size: 16px;
+      width: 50px;
+      margin: 5px;
+      text-align: center;
+    }
+
+    .g5-g6-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .g5, .g6 {
+      font-size: 1.2em;
+      padding: 10px;
+      background-color: #e0e0e0;
+      border-radius: 8px;
+      flex: 1;
+      margin: 0 5px;
+    }
+
+    .progress-bar-container {
+      margin-top: 20px;
+    }
+
+    .progress-bar {
+      height: 20px;
+      width: 100%;
+      background-color: #e0e0e0;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar-inner {
+      height: 100%;
+      width: 0;
+      background-color: #4CAF50;
+      transition: width 0.5s ease;
+    }
+
+    .progress-bar-text {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #fff;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <!-- 1. Resultado y temporizador -->
+    <div class="result-container">
+      <span class="dollar-sign">$</span><span id="dineroDisplay">0</span>
+      <div class="separator">|</div>
+      <div id="timeDisplay" class="time">00:00:00</div>
+    </div>
+
+    <!-- Barra de progreso -->
+    <div class="progress-bar-container">
+      <div class="progress-bar">
+        <div class="progress-bar-inner" id="progressBar"></div>
+        <div class="progress-bar-text" id="progressText">0%</div>
+      </div>
+    </div>
+
+    <!-- 2. Botón de G5 y G6 -->
+    <div>
+      <button id="addG5Button">Añadir G5</button>
+      <button id="addG6Button">Añadir G6</button>
+    </div>
+
+    <!-- 3. Botones de inicio y reinicio -->
+    <div>
+      <button id="startPauseButton">Iniciar</button>
+      <button id="resetButton" disabled>Reiniciar</button>
+    </div>
+
+    <!-- 4. Recuadros del temporizador -->
+    <div class="inputs">
+      <input type="number" id="inputHours" placeholder="Hrs" min="0">
+      <input type="number" id="inputMinutes" placeholder="Min" min="0">
+      <input type="number" id="inputSeconds" placeholder="Sec" min="0" max="59">
+      <input type="number" id="dineroInput" placeholder="Dinero" step="any">
+    </div>
+
+    <!-- 5. Recuadros de G5 y G6 para introducir datos -->
+    <div class="g5-g6-container">
+      <div id="g5" class="g5">
+        G5: <input type="number" id="g5Input" placeholder="Minutos" min="0">
+      </div>
+      <div id="g6" class="g6">
+        G6: <input type="number" id="g6Input" placeholder="Minutos" min="0">
+      </div>
+    </div>
+
+    <!-- Datos de G3 y G4 -->
+    <div id="gxMinuto" class="gx-minuto">GxMINUTO: $0.00</div>
+    <div id="g3" class="gx-minuto">G3: $3.00 <span class="minutes">0 minutos</span></div>
+    <div id="g4" class="gx-minuto">G4: $2.00 <span class="minutes">0 minutos</span></div>
+  </div>
+
+  <script>
+    let timer;
+    let isRunning = false;
+    let totalSeconds = 0;
+    let targetSeconds = 0;
+    let dinero = 0;
+    let dineroIncrement = 0;
+
+    const startPauseButton = document.getElementById("startPauseButton");
+    const resetButton = document.getElementById("resetButton");
+    const timeDisplay = document.getElementById("timeDisplay");
+    const inputHours = document.getElementById("inputHours");
+    const inputMinutes = document.getElementById("inputMinutes");
+    const inputSeconds = document.getElementById("inputSeconds");
+    const dineroInput = document.getElementById("dineroInput");
+    const dineroDisplay = document.getElementById("dineroDisplay");
+    const gxMinutoDisplay = document.getElementById("gxMinuto");
+    const g3Display = document.getElementById("g3");
+    const g4Display = document.getElementById("g4");
+    const g5Input = document.getElementById("g5Input");
+    const g6Input = document.getElementById("g6Input");
+    const progressBar = document.getElementById("progressBar");
+    const progressText = document.getElementById("progressText");
+
+    function updateTimeDisplay() {
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      timeDisplay.textContent = `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
+    }
+
+    function padZero(number) {
+      return number < 10 ? `0${number}` : number;
+    }
+
+    function updateProgressBar() {
+      const progress = (totalSeconds / targetSeconds) * 100;
+      progressBar.style.width = `${progress}%`;
+      progressText.textContent = `${Math.floor(progress)}%`;
+    }
+
+    function updateCalculations() {
+      const totalMinutes = totalSeconds / 60;
+      const gxMinuto = totalMinutes > 0 ? dinero / totalMinutes : 0;
+      gxMinutoDisplay.textContent = `GxMINUTO: $${gxMinuto.toFixed(2)}`;
+
+      const minutesForG3 = gxMinuto > 0 ? (3 / gxMinuto).toFixed(2) : 0;
+      const minutesForG4 = gxMinuto > 0 ? (2 / gxMinuto).toFixed(2) : 0;
+
+      g3Display.innerHTML = `G3: $3.00 <span class="minutes">${minutesForG3} minutos</span>`;
+      g4Display.innerHTML = `G4: $2.00 <span class="minutes">${minutesForG4} minutos</span>`;
+    }
+
+    function startPauseTimer() {
+      const hours = parseInt(inputHours.value) || 0;
+      const minutes = parseInt(inputMinutes.value) || 0;
+      const seconds = parseInt(inputSeconds.value) || 0;
+
+      targetSeconds = (hours * 3600) + (minutes * 60) + seconds;
+
+      if (targetSeconds <= 0) return;
+
+      const dineroValor = parseFloat(dineroInput.value) || 0;
+      dineroIncrement = dineroValor / targetSeconds;
+
+      if (isRunning) {
+        clearInterval(timer);
+        startPauseButton.textContent = "Iniciar";
+      } else {
+        timer = setInterval(() => {
+          if (totalSeconds >= targetSeconds) {
+            clearInterval(timer);
+            startPauseButton.textContent = "Iniciar";
+            isRunning = false;
+            resetButton.disabled = false;
+          } else {
+            totalSeconds++;
+            dinero += dineroIncrement;
+            updateTimeDisplay();
+            updateDineroDisplay();
+            updateProgressBar();
+            updateCalculations();
+          }
+        }, 1000);
+        startPauseButton.textContent = "Pausar";
+      }
+
+      isRunning = !isRunning;
+    }
+
+    function updateDineroDisplay() {
+      dineroDisplay.textContent = dinero.toFixed(2);
+    }
+
+    function resetTimer() {
+      clearInterval(timer);
+      totalSeconds = 0;
+      dinero = 0;
+      updateTimeDisplay();
+      updateDineroDisplay();
+      updateProgressBar();
+      updateCalculations();
+      startPauseButton.textContent = "Iniciar";
+      isRunning = false;
+      resetButton.disabled = true;
+    }
+
+    function addG5() {
+      const minutesForG5 = parseFloat(g5Input.value) || 0;
+      totalSeconds += minutesForG5 * 60;
+      dinero += dineroIncrement * (minutesForG5 * 60);
+      updateTimeDisplay();
+      updateDineroDisplay();
+      updateProgressBar();
+      updateCalculations();
+    }
+
+    function addG6() {
+      const minutesForG6 = parseFloat(g6Input.value) || 0;
+      totalSeconds += minutesForG6 * 60;
+      dinero += dineroIncrement * (minutesForG6 * 60);
+      updateTimeDisplay();
+      updateDineroDisplay();
+      updateProgressBar();
+      updateCalculations();
+    }
+
+    startPauseButton.addEventListener("click", startPauseTimer);
+    resetButton.addEventListener("click", resetTimer);
+    document.getElementById("addG5Button").addEventListener("click", addG5);
+    document.getElementById("addG6Button").addEventListener("click", addG6);
+  </script>
+</body>
+</html>

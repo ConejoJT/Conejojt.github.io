@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Tamagotchi Conejito</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    #bunny {
+      font-size: 100px;
+    }
+    .status-bar {
+      width: 200px;
+      height: 15px;
+      background-color: #ccc;
+      margin: 10px auto;
+      position: relative;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .status-fill {
+      height: 15px;
+      background-color: green;
+      width: 100%;
+      position: absolute;
+    }
+    button {
+      margin: 5px;
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      border: none;
+      background-color: #007BFF;
+      color: white;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .status-value {
+      font-size: 18px;
+      margin-top: 5px;
+    }
+    .star-container {
+      font-size: 30px;
+      margin: 10px 0;
+    }
+    .star {
+      color: gray;
+    }
+    .filled {
+      color: gold;
+    }
+    #coin-display {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+    #rank-display {
+      font-size: 24px;
+      margin: 10px 0;
+    }
+    #countdown {
+      font-size: 24px;
+      margin-top: 20px;
+      color: red;
+    }
+    #activation-count {
+      font-size: 18px;
+      margin-top: 10px;
+    }
+    .disabled-button {
+      background-color: grey;
+      cursor: not-allowed;
+    }
+    #name-container {
+      margin-top: 20px;
+    }
+    #name-input {
+      padding: 5px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Mostrar el rango actual -->
+  <div id="rank-display">Rango: Mortal</div>
+
+  <!-- Mostrar el nombre de la mascota -->
+  <div id="pet-name-display"></div>
+
+  <div id="bunny">🐇</div>
+
+  <!-- Estrellas y valores -->
+  <div class="star-container" id="stars">
+    <span id="star-1" class="star">★</span>
+    <span id="star-2" class="star">★</span>
+    <span id="star-3" class="star">★</span>
+    <span id="star-4" class="star">★</span>
+    <span id="star-5" class="star">★</span>
+    <span id="star-6" class="star">★</span>
+    <br>
+    <span id="star-values-up">
+      <span id="current-star-value-up">20</span> / <span id="coins-to-next-star-up">30</span>
+    </span>
+  </div>
+
+  <div class="status-bar">
+    <div id="hunger-bar" class="status-fill"></div>
+  </div>
+  <div class="status-value" id="hunger-value">Hambre: 100</div>
+
+  <div class="status-bar">
+    <div id="happiness-bar" class="status-fill"></div>
+  </div>
+  <div class="status-value" id="happiness-value">Felicidad: 100</div>
+
+  <button onclick="feed()">🍎 Alimentar</button>
+  <button onclick="play()">🎾 Jugar</button>
+  
+  <!-- Botones para dormir y despertar -->
+  <button onclick="sleep()">😴 Dormir</button>
+  <button onclick="wakeUp()">🌞 Despertar</button>
+
+  <!-- Monedas -->
+  <br>
+  <input type="text" id="coin-input" placeholder="Ingrese monedas" maxlength="2" oninput="limitInput(this)" />
+
+
+  <button id="coin-button" onclick="earnCoins()">💰 Obtener Monedas</button>
+
+  <!-- Mostrar información de monedas -->
+  <div id="coin-display">
+    <p>Monedas agregadas: <span id="added-coins">0</span></p>
+    <p>Estrella actual: <span id="current-star-value">20</span> monedas</p>
+    <p>Monedas restantes para la siguiente estrella: <span id="coins-to-next-star">30</span></p>
+    <p>Monedas Totales: <span id="total-coins">0</span></p> <!-- Nuevo cuadro para monedas totales -->
+  </div>
+
+  <div id="countdown"></div>
+
+  <!-- Contador de activaciones -->
+  <div id="activation-count">
+    <p>Contador de activaciones: <span id="activation-counter">0</span></p>
+  </div>
+
+  <!-- Cuadro para establecer nombre -->
+  <div id="name-container">
+    <input type="text" id="name-input" placeholder="Ponle un nombre a tu mascota" />
+    <button onclick="setName()">Establecer Nombre</button>
+  </div>
+
+  <script>
+    let hunger = parseFloat(localStorage.getItem('hunger')) || 100;
+    let happiness = parseFloat(localStorage.getItem('happiness')) || 100;
+    const maxHunger = 100;
+    const maxHappiness = 100;
+    let coins = parseInt(localStorage.getItem('coins')) || 0;
+    let totalCoins = parseInt(localStorage.getItem('totalCoins')) || 0;
+
+    let hungerTimer;
+    let happinessTimer;
+
+    // Variables para las estrellas
+    const starGoals = [20, 50, 125, 313, 783, 1958];
+    let starsUnlocked = parseInt(localStorage.getItem('starsUnlocked')) || 0;
+
+    // Contador de activaciones del temporizador
+    let activationCounter = parseInt(localStorage.getItem('activationCounter')) || 0;
+
+    // Estado de sueño
+    let isSleeping = localStorage.getItem('isSleeping') === 'true';
+
+    // Definir los rangos y sus límites de estrellas
+    const ranks = ["Mortal", "Héroe", "Semidiós", "Titán", "Dios", "Dios Mayor", "Ancestro Divino", "Ser Celestial", "Eterno"];
+    const rankLimits = [0, 20, 50, 125, 313, 783, 1958, 4000, 8000];
+    let currentRankIndex = parseInt(localStorage.getItem('currentRankIndex')) || 0;
+
+    let petName = localStorage.getItem('petName') || '';  // Nombre de la mascota
+
+    function updateBars() {
+      document.getElementById("hunger-bar").style.width = hunger + "%";
+      document.getElementById("happiness-bar").style.width = happiness + "%";
+      document.getElementById("hunger-value").textContent = "Hambre: " + hunger;
+      document.getElementById("happiness-value").textContent = "Felicidad: " + happiness;
+    }
+
+    function updateStars() {
+      for (let i = 0; i < 6; i++) {
+        const star = document.getElementById(`star-${i + 1}`);
+        if (i < starsUnlocked) {
+          star.classList.add('filled');
+        } else {
+          star.classList.remove('filled');
+        }
+      }
+    }
+
+    function updateCoinDisplay() {
+      const addedCoins = document.getElementById("added-coins");
+      const currentStarValue = document.getElementById("current-star-value");
+      const coinsToNextStar = document.getElementById("coins-to-next-star");
+      const totalCoinsDisplay = document.getElementById("total-coins");
+
+      addedCoins.textContent = coins;
+      currentStarValue.textContent = starGoals[starsUnlocked] || starGoals[starGoals.length - 1];
+
+      if (starsUnlocked < starGoals.length) {
+        coinsToNextStar.textContent = starGoals[starsUnlocked] - coins;
+      } else {
+        coinsToNextStar.textContent = "¡Has alcanzado la última estrella!";
+      }
+
+      totalCoinsDisplay.textContent = totalCoins;
+    }
+
+    function updateStarValuesUp() {
+      const currentStarValueUp = document.getElementById("current-star-value-up");
+      const coinsToNextStarUp = document.getElementById("coins-to-next-star-up");
+
+      currentStarValueUp.textContent = starGoals[starsUnlocked] || starGoals[starGoals.length - 1];
+      if (starsUnlocked < starGoals.length) {
+        coinsToNextStarUp.textContent = starGoals[starsUnlocked] - coins;
+      } else {
+        coinsToNextStarUp.textContent = "¡Has alcanzado la última estrella!";
+      }
+    }
+
+    function updateRank() {
+      if (starsUnlocked === 6) {
+        if (currentRankIndex < ranks.length - 1) {
+          currentRankIndex++;
+        }
+        starsUnlocked = 0;
+      }
+      document.getElementById("rank-display").textContent = "Rango: " + ranks[currentRankIndex];
+    }
+
+    function feed() {
+      hunger = Math.min(hunger + 20, maxHunger);
+      clearInterval(hungerTimer);
+      if (!isSleeping) startHungerTimer();
+      localStorage.setItem('hunger', hunger);  // Guardar el valor actualizado
+      updateBars();
+    }
+
+    function play() {
+      happiness = Math.min(happiness + 20, maxHappiness);
+      clearInterval(happinessTimer);
+      if (!isSleeping) startHappinessTimer();
+      localStorage.setItem('happiness', happiness);  // Guardar el valor actualizado
+      updateBars();
+    }
+
+    function startHungerTimer() {
+      hungerTimer = setInterval(() => {
+        hunger = Math.max(hunger - (maxHunger / 3600), 0);
+        localStorage.setItem('hunger', hunger);  // Guardar el valor actualizado
+        updateBars();
+        if (hunger === 0) {
+          alert("¡Tu conejito tiene hambre y necesita atención!");
+          clearInterval(hungerTimer);
+        }
+      }, 1000);
+    }
+
+    function startHappinessTimer() {
+      happinessTimer = setInterval(() => {
+        happiness = Math.max(happiness - (maxHappiness / 7200), 0);
+        localStorage.setItem('happiness', happiness);  // Guardar el valor actualizado
+        updateBars();
+        if (happiness === 0) {
+          alert("¡Tu conejito está triste y necesita atención!");
+          clearInterval(happinessTimer);
+        }
+      }, 1000);
+    }
+
+    function earnCoins() {
+      const coinInput = document.getElementById("coin-input");
+      const coinsToAdd = parseInt(coinInput.value, 10);
+      if (!isNaN(coinsToAdd) && coinsToAdd > 0) {
+        coins += coinsToAdd;
+
+        if (coins > 1958) {
+          coins = 1958;
+        }
+
+        totalCoins += coinsToAdd;
+        checkStars();
+        coinInput.value = '';
+        localStorage.setItem('coins', coins);
+        localStorage.setItem('totalCoins', totalCoins);  // Guardar las monedas
+        updateCoinDisplay();
+        updateStarValuesUp();
+        updateRank();
+      }
+    }
+
+    function checkStars() {
+      for (let i = 0; i < starGoals.length; i++) {
+        if (coins >= starGoals[i] && starsUnlocked <= i) {
+          starsUnlocked = i + 1;
+        }
+      }
+      localStorage.setItem('starsUnlocked', starsUnlocked);  // Guardar el número de estrellas
+      updateStars();
+
+      if (coins >= 1958) {
+        startCountdown();
+      }
+    }
+
+    function startCountdown() {
+      let countdownValue = 5;
+      const countdownDisplay = document.getElementById("countdown");
+      countdownDisplay.textContent = "¡Contando regresivamente para reiniciar... " + countdownValue + " segundos!";
+
+      activationCounter++;
+      localStorage.setItem('activationCounter', activationCounter);  // Guardar el contador de activaciones
+
+      const countdownInterval = setInterval(() => {
+        countdownValue--;
+        countdownDisplay.textContent = "¡Contando regresivamente para reiniciar... " + countdownValue + " segundos!";
+        if (countdownValue <= 0) {
+          clearInterval(countdownInterval);
+          coins = 0;
+          totalCoins = 0;
+          localStorage.setItem('coins', coins);
+          localStorage.setItem('totalCoins', totalCoins);  // Resetear monedas
+          updateCoinDisplay();
+          updateStarValuesUp();
+          updateRank();
+        }
+      }, 1000);
+    }
+
+    function setName() {
+      petName = document.getElementById("name-input").value;
+      localStorage.setItem('petName', petName);  // Guardar el nombre
+      document.getElementById("pet-name-display").textContent = petName ? `Nombre de tu conejito: ${petName}` : '';
+    }
+
+    function wakeUp() {
+      isSleeping = false;
+      localStorage.setItem('isSleeping', isSleeping);  // Guardar el estado de sueño
+      startHungerTimer();
+      startHappinessTimer();
+    }
+
+    function sleep() {
+      isSleeping = true;
+      localStorage.setItem('isSleeping', isSleeping);  // Guardar el estado de sueño
+      clearInterval(hungerTimer);
+      clearInterval(happinessTimer);
+    }
+
+    function limitInput(input) {
+      if (input.value.length > input.maxLength) {
+        input.value = input.value.slice(0, input.maxLength);
+      }
+    }
+
+    function init() {
+      updateBars();
+      updateStars();
+      updateCoinDisplay();
+      updateStarValuesUp();
+      updateRank();
+      setName();
+      startHungerTimer();
+      startHappinessTimer();
+    }
+
+    init();
+  </script>
+</body>
+</html>

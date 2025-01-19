@@ -7,7 +7,8 @@
 
   <title></title>
   <style>
-     button:active {
+   /**/
+    button:active {
     box-shadow: none;
     outline: none;
 }
@@ -16,10 +17,10 @@
       display: flex;
       justify-content: center; /* Alineado a la izquierda */
       align-items: center;
-      height: auto;
+      height: 100%;
       margin: 0;
       background-color: #f4f4f4;
-      padding-left: 20px; /* Añadido espacio desde el borde izquierdo */
+   /*   padding-left: 20px;  Añadido espacio desde el borde izquierdo */
     }
     .timer-container {
       display: flex;
@@ -251,7 +252,7 @@
     height: 20px;
     background-color: #e0e0e0;
     border-radius: 10px;
-    overflow: hidden;
+    overflow: auto;
     margin: 10px 0;
   }
 
@@ -259,7 +260,7 @@
   label {
     margin-right: 10px;
   }
-.progress-bar {
+.ppcipal, .progress-bar  {
   height: 100%;
   background-color: #76c7c0; /* Color inicial */
   width: 0%;
@@ -268,7 +269,7 @@
   transition: width 0.3s ease;
 }
 
-.progress-bar.exceed {
+.ppcipal.exceed {
   background: repeating-linear-gradient(
     45deg,            /* Ángulo de las franjas (diagonal) */
     #ffd737,          /* Primer color */
@@ -288,12 +289,12 @@
     background-position: 100% 0%;
   }
 }
-.progress-bar::before {
+.ppcipal::before {
   content: "🔥 ¡Estás en otro nivel!";
   text-align: center;
   font-size: 14px;
   height: 100%;
-  width: 100%;
+  width: 101%;
   display: flex;
   justify-content: center;
 }
@@ -322,6 +323,11 @@
     .contador2 div:nth-child(4) input{
       width: 100%;
       flex: 4;
+      text-align: center;
+      font-size: 16px;
+      background-color: black;
+      color: white;
+      font-weight: bold
     }
   .boton-dar {
     background: linear-gradient(45deg, rgb(0, 137, 194), rgb(0, 73, 150)); /* Verde brillante */
@@ -330,14 +336,14 @@
     padding: 8px 15px;
     line-height: 0px;
     border: none;
-    box-shadow: 0px 4px 6px rgba(0, 128, 0, 0.4); /* Sombra verde suave */
+    box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.71); /* Sombra verde suave */
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
     font-size: 20px;
 }
 .boton-dar:hover {
     transform: scale(1.05); /* Efecto de aumento al pasar el ratón */
-    box-shadow: 0px 6px 10px rgba(0, 128, 0, 0.6); /* Más brillo */
+    box-shadow: 0px 2px 5px rgba(0, 48, 48, 0.71); /* Más brillo */
 }
   </style>
 </head>
@@ -372,16 +378,12 @@
     <span id="staticSueldo">💰 $0.00</span>
   </div>
   <div class="progress-container">
-    <div id="staticProgressBar" class="progress-bar"></div>
+    <div id="staticProgressBar" class="progress-bar ppcipal"></div>
   </div>
-<!--
+
+ 
   <div>
-    <label for="staticTimeInput">Minutos a aumentar:</label>
-    <input id="staticTimeInput" type="number" min="1" placeholder="1">
-    <button id="addStaticTimeBtn">Aumentar Tiempo</button>
-  </div>-->
-  <div>
-       <input id="staticSueldoInput" type="number" step="0.01" placeholder="0">
+       <input id="staticSueldoInput" type="number" step="0.01" placeholder="Ingrese Monedas A">
  <button id="addStaticSueldoBtn" class="boton-dar"><span class="iconify" data-icon="twemoji:coin"></span></button>
    <input id="staticExtraSueldoInput" type="number" step="0.01" placeholder="Ingrese Monedas B">
     
@@ -389,10 +391,17 @@
   </div>
 </div>
     <!-- Segunda barra de progreso para el excedente -->
-<div class="progress-container" id="excessProgressContainer" style="display: none;">
-  <div id="excessProgressBar" class="progress-bar"></div>
+<div class="progress-container" id="excessProgressContainer" style="display: none; visibility: hidden; position: absolute;">
+  <div id="excessProgressBar" class="progress-bar" style="display: none; visibility: hidden;"></div>
 </div>
 
+<!-- Contenedor HTML adicional para la nueva funcionalidad -->
+
+ <div style="display: none">
+    <label for="staticTimeInput">Minutos a aumentar:</label>
+    <input id="staticTimeInput" type="number" min="1" placeholder="1">
+    <button id="addStaticTimeBtn">Aumentar Tiempo</button>
+  </div>
     <div class="controls">
   <p id="message">⚠️ Ingrese el valor que va ganar durante el Dia. <br>⚠️ Ingrese El valor de Tiempo y Sueldo para que el programa funcione correctamente.
 <br>⚠️ No actualice el programa y si lo hace vuelva a introducir los valoes.

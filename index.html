@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://code.iconify.design/2/2.0.0/iconify.min.js"></script>
+
+  <title></title>
+  <style>
+   /**/
+    button:active {
+    box-shadow: none;
+    outline: none;
+}
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center; /* Alineado a la izquierda */
+      align-items: center;
+      height: 100%;
+      margin: 0;
+      background-color: #f4f4f4;
+   /*   padding-left: 20px;  Añadido espacio desde el borde izquierdo */
+    }
+    .timer-container {
+      display: flex;
+      flex-direction: column; /* Dirección de los elementos en columna */
+      align-items: center; /* Alineado a la izquierda */
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 100%; /* Ajusta el ancho del contenedor */
+
+    }
+    .timer {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    .sueldo {
+      font-size: 24px; /* Reducido al 50% del tamaño del temporizador */
+      margin-top: 10px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between; /* Alinea el sueldo a la izquierda y el botón a la derecha */
+      width: 100%; /* Para ocupar toda la fila */
+    }
+    .settings-btn {
+      cursor: pointer;
+      font-size: 24px;
+      border: none;
+      background: none;
+    }
+    .controls {
+      display: flex;
+      flex-direction: column;
+        justify-content: center;
+        align-content: center;
+        align-items: center;
+        align-content: center;
+      margin-top: 0px;
+      gap: 5px;
+    }
+    .controls input {
+      padding: 5px;
+      font-size: 14px;
+      width: 60px;
+    }
+    .controls button {
+      margin: 5px 0;
+      padding: 10px;
+      background-color: rgb(14, 121, 233);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      
+    } .controls button:disabled {
+  background-color: rgb(255, 255, 255); /* Color de fondo para el botón deshabilitado */
+  color: #666666;           /* Color del texto para el botón deshabilitado */
+  border: 1px solid #aaaaaa; /* Borde para el botón deshabilitado */
+  cursor: not-allowed;      /* Cambia el cursor para indicar que no es interactivo */
+  opacity: 0.6;             /* Reduce la opacidad para que se vea diferente */
+}
+    
+     .controls button:disabled:hover {
+      background-color: transparent;
+      color: black;
+    }
+    .controls button:hover {
+      background-color: #0056b3;
+    }
+    .progress-container {
+      width: 100%;
+      height: 10px;
+      background-color: #ddd;
+      border-radius: 5px;
+      margin: 10px 0;
+    }
+    .progress-bar {
+      height: 100%;
+      background-color: #4caf50;
+      width: 0%;
+      border-radius: 5px;
+    }
+    .add-time-buttons {
+      display: flex;
+      justify-content: center; /* Pone los botones en línea */
+      width: 100%; /* Asegura que los botones ocupen el mismo espacio */
+    }
+    /* Estilo para el botón que abre la ventana */
+    .open-btn {
+      cursor: pointer;
+      font-size: 24px;
+      border: none;
+      background: none;
+    }
+
+    /* Estilo de la ventana emergente (inicialmente oculta) */
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 15px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      width: 300px;
+      text-align: center;
+      color: #1a1a1a;
+    }
+ .popup {
+    }
+
+    /* Estilo para el botón de cierre dentro de la ventana */
+    .controls button.close-btn {
+      padding: 5px 10px;
+      background-color: #ff4747;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .close-btn:hover {
+      background-color: #cc3f3f;
+    }
+   .code1 {
+      display: flex;
+      justify-content: space-between; /* Pone los botones en línea */
+      width: 100%; /* Asegura que los botones ocupen el mismo espacio */
+      gap: 20px;
+    }
+  .code1 div:nth-child(2){
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+    align-content: flex-start;
+    flex-wrap: wrap;
+ }
+ .code1 div:nth-child(2) button{
+    display: flex;
+      padding: 2px;
+      margin: 2px 0;   
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 20px;
+   background-color: transparent;
+ }
+    .code1 div:nth-child(2) button:hover {
+ /*Esto trabaja los botones del temporizador inicio*/
+    }
+  .add-time-buttons {
+      display: flex;
+    gap: 22px;
+      
+    }
+  .add-time-buttons div {
+      display: flex;
+      flex-direction: column;
+   
+    }
+    .add-time-buttons div button{
+    width: 100%;
+    font-weight: bold;
+    }
+   .ConT{
+      display: flex;
+      justify-content: center;
+      gap: 12px; 
+    }
+    .popup div label{
+  font-size: 15px;
+    }
+    .ConT div{
+      display: flex;
+      flex-direction: column;
+    }
+    .ConT + div{
+      margin: 15px 0;
+    }
+  .ConT + div + div{
+      display: flex;
+      align-items: center;
+  padding: 0 0 15px 0;
+    }
+.ConT + div + div + div {
+      background-color: black;
+    border-radius: 10px;
+  padding: 1px 6px;
+    }
+.ConT + div + div + div p:nth-child(1){
+      text-align: center;
+      font-weight: bold;
+  color: darkorange;
+    }
+.ConT + div + div + div p{
+      text-align: center;
+      font-weight: bold;
+      color: darkturquoise;
+      font-size: 14px;
+    }
+.Paneldecolores{
+     display: flex;
+  gap: 12px;
+    }
+.Paneldecolores button{
+     background-color: transparent;
+  border-radius: 100%;
+    }
+.Paneldecolores button:hover{
+     background-color: rgba(255, 255, 255, 0.22);
+    }
+.message-container{
+     background-color: rgba(255, 255, 255, 0.22);
+  text-align: center;
+    }
+.message-container p{
+     background-color: rgba(255, 255, 255, 0.22);
+  text-align: center;
+  margin: 0;
+  padding: 10px 15px;
+  font-size: 13px;
+    }
+    
+    
+  .progress-container {
+    width: 100%;
+    height: 20px;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    overflow: auto;
+    margin: 10px 0;
+  }
+
+
+  label {
+    margin-right: 10px;
+  }
+.ppcipal, .progress-bar  {
+  height: 100%;
+  background-color: #76c7c0; /* Color inicial */
+  width: 0%;
+  position: relative;
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
+
+.ppcipal.exceed {
+  background: repeating-linear-gradient(
+    45deg,            /* Ángulo de las franjas (diagonal) */
+    #ffd737,          /* Primer color */
+    #ffd737 20px,     /* Largo de la franja del primer color */
+    #ffcc00 20px,     /* Segundo color empieza aquí */
+    #ffcc00 40px      /* Largo de la franja del segundo color */
+  );
+  background-size: 200% 200%; /* Tamaño del patrón para que se mueva suavemente */
+  animation: diagonalMove 3s linear infinite; /* Animación del movimiento */
+}
+
+@keyframes diagonalMove {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 0%;
+  }
+}
+.ppcipal::before {
+  content: "🔥 ¡Estás en otro nivel!";
+  text-align: center;
+  font-size: 14px;
+  height: 100%;
+  width: 101%;
+  display: flex;
+  justify-content: center;
+}
+.contador2 {
+     width: 100%;
+    
+    }
+    .contador2 .f1{
+      display: flex;
+      justify-content:flex-start;
+      gap: 8px;
+    
+    }
+    .contador2 h3{
+      font-size: 12px;
+      margin: 0;
+    }
+    .contador2 div:nth-child(4){
+      display: flex;
+      background-color: red;
+    }
+    .contador2 div:nth-child(4) button{
+      flex: 1;
+      
+    }
+    .contador2 div:nth-child(4) input{
+      width: 100%;
+      flex: 4;
+      text-align: center;
+      font-size: 16px;
+      background-color: black;
+      color: white;
+      font-weight: bold
+    }
+  .boton-dar {
+    background: linear-gradient(45deg, rgb(0, 137, 194), rgb(0, 73, 150)); /* Verde brillante */
+    color: white;
+    font-weight: bold;
+    padding: 8px 15px;
+    line-height: 0px;
+    border: none;
+    box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.71); /* Sombra verde suave */
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-size: 20px;
+}
+.boton-dar:hover {
+    transform: scale(1.05); /* Efecto de aumento al pasar el ratón */
+    box-shadow: 0px 2px 5px rgba(0, 48, 48, 0.71); /* Más brillo */
+}
+  </style>
+</head>
+<body>
+
+  <div id="customContainer" class="timer-container" >
+    <div class="code1">
+      <div class="timer" id="timer">00:00:00</div>
+      <div>
+        <button id="startPauseBtn">▶️</button>
+        <button id="resetBtn">🔄</button>
+      </div>
+    </div>
+    <div class="sueldo" id="sueldo-container">
+      <div id="sueldo">💰 0.00</div>
+      <button class="open-btn" id="openBtn">⚙️</button>
+    </div>
+
+    <!-- Barra de progreso -->
+    <div class="progress-container">
+      <div id="progressBar" class="progress-bar"></div>
+    </div>
+    
+  <!-- Contenedor HTML adicional para la nueva funcionalidad -->
+<!-- Contenedor HTML adicional para la nueva funcionalidad -->
+<div class="contador2">
+  <h3>Mode Manual&nbsp;</h3>
+  <div class="f1">
+    <div>⏱️
+    <span id="staticTimer">00:00:00</span></div>
+    <span>~</span>
+    <span id="staticSueldo">💰 $0.00</span>
+  </div>
+  <div class="progress-container">
+    <div id="staticProgressBar" class="progress-bar ppcipal"></div>
+  </div>
+
+ 
+  <div>
+       <input id="staticSueldoInput" type="number" step="0.01" placeholder="Ingrese Monedas A">
+ <button id="addStaticSueldoBtn" class="boton-dar"><span class="iconify" data-icon="twemoji:coin"></span></button>
+   <input id="staticExtraSueldoInput" type="number" step="0.01" placeholder="Ingrese Monedas B">
+    
+  <button id="addExtraSueldoBtn" class="boton-dar"><span class="iconify" data-icon="twemoji:coin"></span></button>
+  </div>
+</div>
+    <!-- Segunda barra de progreso para el excedente -->
+<div class="progress-container" id="excessProgressContainer" style="display: none; visibility: hidden; position: absolute;">
+  <div id="excessProgressBar" class="progress-bar" style="display: none; visibility: hidden;"></div>
+</div>
+
+<!-- Contenedor HTML adicional para la nueva funcionalidad -->
+
+ <div style="display: none">
+    <label for="staticTimeInput">Minutos a aumentar:</label>
+    <input id="staticTimeInput" type="number" min="1" placeholder="1">
+    <button id="addStaticTimeBtn">Aumentar Tiempo</button>
+  </div>
+    <div class="controls">
+  <p id="message">⚠️ Ingrese el valor que va ganar durante el Dia. <br>⚠️ Ingrese El valor de Tiempo y Sueldo para que el programa funcione correctamente.
+<br>⚠️ No actualice el programa y si lo hace vuelva a introducir los valoes.
+</p>
+
+
+      <div style="display: none; visibility: hidden; position: absolute;">
+         <label for="staticSueldoInput">Valores A</label>
+      <label for="staticExtraSueldoInput">Valores b</label>
+
+      </div>
+    <div class="add-time-buttons" style="display: none; visibility: hidden; position: absolute;">
+        <div>
+          <button id="addTimeBtn">Add Monedas A</button>
+        </div>
+        <div>
+          <button id="addTimeBtn2">Add Monedas B</button>
+        </div>
+      </div>
+      
+      
+	<div class="message-container" id="messageContainer" style="display: none; visibility: hidden; position: absolute;">
+   <!--   <p id="message">⚠️ Para habilitar los botones de añadir monedas, llena los campos de tiempo, sueldo y moneda.</p>    -->
+</div>
+<div class="Paneldecolores">
+<button id="changeColorBtn">🖼️</button>
+<button id="customColorBtn">🎨</button>
+</div>
+
+    <!-- Ventana emergente -->
+    <div class="popup" id="popup">
+      <p>⚙️ Configuracion</p>
+      <div class="ConT">
+        <div>
+          <label for="hours">Horas</label>
+          <input type="number" id="hours" min="0" max="99" value="0">
+        </div>
+        <div>
+          <label for="minutes">Minutos</label>
+          <input type="number" id="minutes" min="0" max="59" value="0">
+        </div>
+        <div>
+          <label for="seconds">Segundos</label>
+          <input type="number" id="seconds" min="0" max="59" value="0">
+        </div>
+      </div>
+      <div>
+        <label for="sueldoInput">Sueldo:</label>
+        <input type="number" id="sueldoInput" value="0">
+      </div>
+      <div><div>
+        <label for="addSueldoInput">Añadir moneda A</label>
+        <input type="number" id="addSueldoInput" value="0">
+      </div><div>
+        <label for="addSueldoInput2">Añadir moneda B</label>
+        <input type="number" id="addSueldoInput2" value="0">
+      </div></div>
+
+      <div>
+        <p>/Guia</p>
+        <p>1 - Ingresa el valor de tiempo que se va trabajar por dia, semana o mes.</p>
+        <p>2 - Ingresa el valor del Sueldo que ganas o quieres ganar por dia, semana o mes.</p>
+        <p>3 - Ingresa el valor de dinero extra que gane para acelerar el tiempo de trabajo y cumplir su meta.</p>
+      </div>
+      <button class="close-btn" id="closeBtn">Cerrar</button>
+    </div>  
+    </div>
+    
+
+
+    
+  </div>
+
+  <script>
+    let timerInterval;
+    let running = false;
+    let hours = 0, minutes = 0, seconds = 0;
+    let targetHours = 0, targetMinutes = 0, targetSeconds = 0;
+    let sueldo = 0;
+    let sueldoIncrement = 0;
+    let totalTimeInSeconds = 0; 
+
+    const timerElement = document.getElementById("timer");
+    const settingsBtn = document.getElementById("settingsBtn");
+    const startPauseBtn = document.getElementById("startPauseBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const progressBar = document.getElementById("progressBar");
+
+    const hoursInput = document.getElementById("hours");
+    const minutesInput = document.getElementById("minutes");
+    const secondsInput = document.getElementById("seconds");
+    const sueldoInput = document.getElementById("sueldoInput");
+    const sueldoElement = document.getElementById("sueldo");
+    const addSueldoInput = document.getElementById("addSueldoInput");
+    const addTimeBtn = document.getElementById("addTimeBtn");
+    const addSueldoInput2 = document.getElementById("addSueldoInput2");
+    const addTimeBtn2 = document.getElementById("addTimeBtn2");
+
+    function updateButtonTitles() {
+      const sueldo1 = addSueldoInput.value || 0;
+      const sueldo2 = addSueldoInput2.value || 0;
+
+      addTimeBtn.textContent = `+${sueldo1}`;
+      addTimeBtn2.textContent = `+${sueldo2}`;
+      addTimeBtn.style.width = "80px";
+      addTimeBtn2.style.width = "80px";
+    }
+
+    addSueldoInput.addEventListener("input", updateButtonTitles);
+    addSueldoInput2.addEventListener("input", updateButtonTitles);
+
+    // Cargar el estado desde localStorage
+    function loadState() {
+      const savedState = JSON.parse(localStorage.getItem('timerState'));
+      if (savedState) {
+        hours = savedState.hours;
+        minutes = savedState.minutes;
+        seconds = savedState.seconds;
+        sueldo = savedState.sueldo;
+        totalTimeInSeconds = savedState.totalTimeInSeconds;
+        sueldoIncrement = savedState.sueldoIncrement;
+        targetHours = savedState.targetHours;
+        targetMinutes = savedState.targetMinutes;
+        targetSeconds = savedState.targetSeconds;
+        running = savedState.running;
+
+        // Restaurar los valores de los inputs
+        hoursInput.value = savedState.targetHours;
+        minutesInput.value = savedState.targetMinutes;
+        secondsInput.value = savedState.targetSeconds;
+        sueldoInput.value = savedState.sueldoIncrement ? savedState.sueldoInputValue : 0; // Restaurar sueldoInput
+        addSueldoInput.value = savedState.addSueldo1 || 0;
+        addSueldoInput2.value = savedState.addSueldo2 || 0;
+
+        updateTimerDisplay();
+        updateSueldoDisplay();
+        if (running) {
+          timerInterval = setInterval(updateTimer, 1000);
+        }
+      }
+    }
+
+    // Guardar el estado en localStorage
+    function saveState() {
+      const state = {
+        hours, minutes, seconds,
+        sueldo, totalTimeInSeconds, sueldoIncrement,
+        targetHours, targetMinutes, targetSeconds,
+        running,
+        addSueldo1: addSueldoInput.value,
+        addSueldo2: addSueldoInput2.value,
+        sueldoInputValue: sueldoInput.value // Guardar el valor de sueldoInput
+      };
+      localStorage.setItem('timerState', JSON.stringify(state));
+    }
+
+    startPauseBtn.addEventListener("click", () => {
+      if (running) {
+        clearInterval(timerInterval);
+        startPauseBtn.textContent = "▶️";
+      } else {
+        targetHours = parseInt(hoursInput.value) || 0;
+        targetMinutes = parseInt(minutesInput.value) || 0;
+        targetSeconds = parseInt(secondsInput.value) || 0;
+
+        hours = minutes = seconds = 0;
+        sueldo = 0;
+        totalTimeInSeconds = targetHours * 3600 + targetMinutes * 60 + targetSeconds;
+        sueldoIncrement = sueldoInput.value / totalTimeInSeconds;
+
+        timerInterval = setInterval(updateTimer, 1000);
+        startPauseBtn.textContent = "⏸️";
+      }
+      running = !running;
+      saveState();
+    });
+
+    resetBtn.addEventListener("click", () => {
+      clearInterval(timerInterval);
+      running = false;
+      hours = minutes = seconds = 0;
+      sueldo = 0;
+      totalTimeInSeconds = 0;
+      progressBar.style.width = '0%';
+      updateTimerDisplay();
+      updateSueldoDisplay();
+      startPauseBtn.textContent = "▶️";
+      saveState();
+    });
+
+    addTimeBtn.addEventListener("click", () => {
+      const addSueldoValue = parseFloat(addSueldoInput.value) || 0;
+      if (addSueldoValue > 0) {
+        const addedSeconds = Math.round((addSueldoValue / sueldoInput.value) * totalTimeInSeconds);
+        seconds += addedSeconds;
+        while (seconds >= 60) {
+          seconds -= 60;
+          minutes++;
+        }
+        while (minutes >= 60) {
+          minutes -= 60;
+          hours++;
+        }
+        sueldo += addSueldoValue;
+        updateTimerDisplay();
+        updateSueldoDisplay();
+        saveState();
+      }
+    });
+
+    addTimeBtn2.addEventListener("click", () => {
+      const addSueldoValue2 = parseFloat(addSueldoInput2.value) || 0;
+      if (addSueldoValue2 > 0) {
+        const addedSeconds = Math.round((addSueldoValue2 / sueldoInput.value) * totalTimeInSeconds);
+        seconds += addedSeconds;
+        while (seconds >= 60) {
+          seconds -= 60;
+          minutes++;
+        }
+        while (minutes >= 60) {
+          minutes -= 60;
+          hours++;
+        }
+        sueldo += addSueldoValue2;
+        updateTimerDisplay();
+        updateSueldoDisplay();
+        saveState();
+      }
+    });
+
+    function updateTimer() {
+      // Verificar si hemos alcanzado el tiempo objetivo
+      if (hours === targetHours && minutes === targetMinutes && seconds === targetSeconds) {
+        const notificationSound = new Audio("https://cdn.pixabay.com/download/audio/2024/11/27/audio_880f416baf.mp3?filename=notification-sound-269266.mp3");
+        notificationSound.play();
+        clearInterval(timerInterval);
+        running = false;
+        startPauseBtn.textContent = "▶️";
+        return;
+      }
+
+      seconds++;
+      if (seconds === 60) {
+        seconds = 0;
+        minutes++;
+        if (minutes === 60) {
+          minutes = 0;
+          hours++;
+        }
+      }
+
+      sueldo += sueldoIncrement;
+
+      const elapsedSeconds = (hours * 3600 + minutes * 60 + seconds);
+      const progressPercentage = (elapsedSeconds / totalTimeInSeconds) * 100;
+
+      progressBar.style.width = `${progressPercentage}%`;
+
+      if (progressPercentage >= 100) {
+        clearInterval(timerInterval);
+        startPauseBtn.textContent = "▶️";
+        const notificationSound = new Audio("https://cdn.pixabay.com/download/audio/2024/11/27/audio_880f416baf.mp3?filename=notification-sound-269266.mp3");
+        notificationSound.play();
+      }
+
+      updateTimerDisplay();
+      updateSueldoDisplay();
+      saveState();
+    }
+
+    function updateTimerDisplay() {
+      timerElement.textContent = `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
+    }
+
+    function updateSueldoDisplay() {
+      sueldoElement.textContent = `💰 $${sueldo.toFixed(2)}`;
+    }
+
+    function formatTime(time) {
+      return time < 10 ? `0${time}` : time;
+    }
+
+    loadState();
+</script>
+
+
+  <script>
+    const openBtn = document.getElementById('openBtn');
+    const popup = document.getElementById('popup');
+    const closeBtn = document.getElementById('closeBtn');
+
+    openBtn.addEventListener('click', () => {
+      popup.style.display = 'block';
+    });
+
+    closeBtn.addEventListener('click', () => {
+      popup.style.display = 'none';
+    });
+  </script>
+<script>
+  // Función para validar si los inputs de tiempo, sueldo o añadir monedas son válidos
+  function validateInputs() {
+    const timeValid = hoursInput.value > 0 || minutesInput.value > 0 || secondsInput.value > 0;
+    const sueldoValid = sueldoInput.value > 0; // Verifica que el sueldo esté lleno
+    const monedasValid = addSueldoInput.value > 0 || addSueldoInput2.value > 0;
+
+    const isValid = timeValid && sueldoValid && monedasValid;
+
+    // Habilitar/deshabilitar botones según la validación
+    addTimeBtn.disabled = !isValid;
+    addTimeBtn2.disabled = !isValid;
+
+    // Mostrar/ocultar el mensaje de advertencia
+    if (isValid) {
+      document.getElementById('messageContainer').style.display = 'none';
+    } else {
+      document.getElementById('messageContainer').style.display = 'block';
+    }
+  }
+
+  // Verificar la validez de los inputs al modificar sus valores
+  hoursInput.addEventListener('input', validateInputs);
+  minutesInput.addEventListener('input', validateInputs);
+  secondsInput.addEventListener('input', validateInputs);
+  addSueldoInput.addEventListener('input', validateInputs);
+  addSueldoInput2.addEventListener('input', validateInputs);
+  sueldoInput.addEventListener('input', validateInputs); // Se añade validación para el input sueldo
+
+  // Llamar a la función para inicializar el estado de los botones
+  validateInputs();
+</script>
+
+
+
+
+
+<script>
+  // Colores predeterminados 
+  const colors = ['#f3f3f3', '#121212', '#3357FF']; // Rojo, verde, azul
+  let currentColorIndex = 0;
+
+  const changeColorBtn = document.getElementById('changeColorBtn');
+
+  // Cargar color desde localStorage si existe
+  const savedColor = localStorage.getItem('backgroundColor');
+  if (savedColor) {
+    document.body.style.backgroundColor = savedColor;
+  }
+
+  changeColorBtn.addEventListener('click', () => {
+    // Cambiar al siguiente color
+    document.body.style.backgroundColor = colors[currentColorIndex];
+
+    // Guardar el color en localStorage
+    localStorage.setItem('backgroundColor', colors[currentColorIndex]);
+
+    // Actualizar el índice para el siguiente color
+    currentColorIndex = (currentColorIndex + 1) % colors.length;
+  });
+</script>
+
+<script>
+  // Los colores de fondo predefinidos (puedes personalizarlos aquí)
+  const customColors = ["#E5E5E5", "#fec401", "#0063cc", "#00cc41", "#1e1e1e"]; // Tres colores de fondo
+  let currentCustomColorIndex = 0;
+
+  // Función para calcular la luminosidad de un color (en formato hexadecimal)
+  function isDark(color) {
+    const hexColor = color.startsWith('#') ? color.slice(1) : color;
+    const r = parseInt(hexColor.slice(0, 2), 16);
+    const g = parseInt(hexColor.slice(2, 4), 16);
+    const b = parseInt(hexColor.slice(4, 6), 16);
+
+    // Fórmula de luminosidad: 0.2126 * R + 0.7152 * G + 0.0722 * B
+    const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+    return luminance < 0.5;
+  }
+
+  // Función para cambiar el color del texto a blanco si el fondo es oscuro
+  function updateTextColorBasedOnBackground(element) {
+    const backgroundColor = window.getComputedStyle(element).backgroundColor;
+    const rgb = backgroundColor.match(/\d+/g);
+    const r = parseInt(rgb[0]);
+    const g = parseInt(rgb[1]);
+    const b = parseInt(rgb[2]);
+
+    // Convertir RGB a Hex
+    const hexColor = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+
+    if (isDark(hexColor)) {
+      element.style.color = 'white';  // Si el fondo es oscuro, el texto será blanco
+    } else {
+      element.style.color = '';  // Mantener el color original del texto si el fondo es claro
+    }
+  }
+
+  // Aplicar el cambio de color del texto al contenedor cuando se cambia el fondo
+  const customColorBtn = document.getElementById('customColorBtn');
+  const customContainer = document.getElementById('customContainer');
+
+  customColorBtn.addEventListener('click', () => {
+    // Cambiar el color de fondo del contenedor
+    customContainer.style.backgroundColor = customColors[currentCustomColorIndex];
+
+    // Guardar el color en localStorage
+    localStorage.setItem('customContainerColor', customColors[currentCustomColorIndex]);
+
+    // Actualizar el color del texto basado en el nuevo color de fondo
+    updateTextColorBasedOnBackground(customContainer);
+
+    // Actualizar el índice para el siguiente color
+    currentCustomColorIndex = (currentCustomColorIndex + 1) % customColors.length;
+  });
+
+  // Llamada inicial para aplicar el color de texto correcto al cargar la página
+  document.addEventListener("DOMContentLoaded", () => {
+    const savedContainerColor = localStorage.getItem('customContainerColor');
+    if (savedContainerColor) {
+      customContainer.style.backgroundColor = savedContainerColor;
+      updateTextColorBasedOnBackground(customContainer); // Aplicar color del texto según el fondo
+    }
+  });
+</script>
+
+<script>
+// Variables específicas para la nueva funcionalidad
+let staticHours = 0, staticMinutes = 0, staticSeconds = 0;
+let staticSueldo = 0;
+let staticTotalTimeInSeconds = 0;
+const staticProgressBar = document.getElementById("staticProgressBar");
+const excessProgressBar = document.getElementById("excessProgressBar");
+const staticTimeElement = document.getElementById("staticTimer");
+const staticSueldoElement = document.getElementById("staticSueldo");
+const addStaticTimeBtn = document.getElementById("addStaticTimeBtn");
+const addStaticSueldoBtn = document.getElementById("addStaticSueldoBtn");
+const addExtraSueldoBtn = document.getElementById("addExtraSueldoBtn"); // Nuevo botón
+const staticSueldoInput = document.getElementById("staticSueldoInput");
+const staticExtraSueldoInput = document.getElementById("staticExtraSueldoInput"); // Nuevo input para sueldo extra
+const staticTimeInput = document.getElementById("staticTimeInput");
+const excessProgressContainer = document.getElementById("excessProgressContainer"); // Contenedor de la barra de exceso
+
+// Función para guardar datos en LocalStorage
+function saveToLocalStorage() {
+  const staticData = {
+    staticHours,
+    staticMinutes,
+    staticSeconds,
+    staticSueldo,
+    staticTotalTimeInSeconds,
+  };
+  localStorage.setItem("staticData", JSON.stringify(staticData));
+}
+
+// Función para cargar datos desde LocalStorage
+function loadFromLocalStorage() {
+  const savedData = JSON.parse(localStorage.getItem("staticData"));
+  if (savedData) {
+    staticHours = savedData.staticHours || 0;
+    staticMinutes = savedData.staticMinutes || 0;
+    staticSeconds = savedData.staticSeconds || 0;
+    staticSueldo = savedData.staticSueldo || 0;
+    staticTotalTimeInSeconds = savedData.staticTotalTimeInSeconds || 0;
+  }
+}
+
+// Inicializar valores desde los inputs principales
+function initializeStaticValues() {
+  const targetHours = parseInt(hoursInput.value) || 0;
+  const targetMinutes = parseInt(minutesInput.value) || 0;
+  const targetSeconds = parseInt(secondsInput.value) || 0;
+  const sueldoInputValue = parseFloat(sueldoInput.value) || 0;
+
+  staticHours = 0;
+  staticMinutes = 0;
+  staticSeconds = 0;
+  staticSueldo = 0;
+  staticTotalTimeInSeconds = targetHours * 3600 + targetMinutes * 60 + targetSeconds;
+  staticSueldoIncrement = sueldoInputValue / staticTotalTimeInSeconds;
+
+  saveToLocalStorage();
+  updateStaticDisplay();
+}
+
+// Botón para añadir tiempo de forma estática
+addStaticTimeBtn.addEventListener("click", () => {
+  const addedSeconds = parseInt(staticTimeInput.value) * 60 || 60; // Aumentar tiempo estático en minutos
+  staticSeconds += addedSeconds;
+  while (staticSeconds >= 60) {
+    staticSeconds -= 60;
+    staticMinutes++;
+  }
+  while (staticMinutes >= 60) {
+    staticMinutes -= 60;
+    staticHours++;
+  }
+
+  // Actualizar sueldo estático proporcionalmente
+  staticSueldo += staticSueldoIncrement * addedSeconds;
+
+  saveToLocalStorage();
+  updateStaticDisplay();
+});
+
+// Botón para añadir sueldo de forma estática
+addStaticSueldoBtn.addEventListener("click", () => {
+  const addedSueldo = parseFloat(staticSueldoInput.value) || 0;
+  const addedSeconds = Math.round(addedSueldo / staticSueldoIncrement);
+
+  staticSueldo += addedSueldo;
+
+  staticSeconds += addedSeconds;
+  while (staticSeconds >= 60) {
+    staticSeconds -= 60;
+    staticMinutes++;
+  }
+  while (staticMinutes >= 60) {
+    staticMinutes -= 60;
+    staticHours++;
+  }
+
+  saveToLocalStorage();
+  updateStaticDisplay();
+});
+
+// Nuevo botón para añadir sueldo extra
+addExtraSueldoBtn.addEventListener("click", () => {
+  const addedSueldo = parseFloat(staticExtraSueldoInput.value) || 0;
+  const addedSeconds = Math.round(addedSueldo / staticSueldoIncrement);
+
+  staticSueldo += addedSueldo;
+
+  staticSeconds += addedSeconds;
+  while (staticSeconds >= 60) {
+    staticSeconds -= 60;
+    staticMinutes++;
+  }
+  while (staticMinutes >= 60) {
+    staticMinutes -= 60;
+    staticHours++;
+  }
+
+  saveToLocalStorage();
+  updateStaticDisplay();
+});
+
+// Actualizar la barra de progreso y el sueldo mostrado
+function updateStaticDisplay() {
+  const elapsedStaticSeconds = staticHours * 3600 + staticMinutes * 60 + staticSeconds;
+  const progressPercentage = Math.min((elapsedStaticSeconds / staticTotalTimeInSeconds) * 100, 100); // No exceder el 100%
+
+  staticProgressBar.style.width = `${progressPercentage}%`;
+
+  // Cambiar el color de la barra de progreso principal si se ha excedido el total
+  if (elapsedStaticSeconds >= staticTotalTimeInSeconds) {
+    staticProgressBar.style.backgroundColor = "#ff6f61"; // Color de exceso (rojo)
+    staticProgressBar.classList.add("exceed"); // Activar la animación con franjas
+  } else {
+    staticProgressBar.style.backgroundColor = "#76c7c0"; // Color original (verde)
+    staticProgressBar.classList.remove("exceed"); // Desactivar la animación
+  }
+
+  // Verificar si hay exceso de tiempo o sueldo
+  const remainingTime = staticTotalTimeInSeconds - elapsedStaticSeconds;
+  let excessPercentage = 0;
+
+  if (staticSueldo > staticTotalTimeInSeconds) {
+    // Hay exceso en el sueldo
+    excessPercentage = ((staticSueldo - staticTotalTimeInSeconds) / staticSueldo) * 100;
+    excessProgressContainer.style.display = "block"; // Mostrar la segunda barra
+    excessProgressBar.style.width = `${excessPercentage}%`;
+  } else {
+    excessProgressContainer.style.display = "none"; // Ocultar la segunda barra
+  }
+
+  staticTimeElement.textContent = `${formatTime(staticHours)}:${formatTime(staticMinutes)}:${formatTime(staticSeconds)}`;
+  staticSueldoElement.textContent = `💰 $${staticSueldo.toFixed(2)}`;
+
+  saveToLocalStorage();
+}
+
+// Formatear el tiempo para mostrar
+function formatTime(time) {
+  return time < 10 ? `0${time}` : time;
+}
+
+// Escuchar cambios en los inputs principales para reiniciar los valores estáticos
+hoursInput.addEventListener("input", initializeStaticValues);
+minutesInput.addEventListener("input", initializeStaticValues);
+secondsInput.addEventListener("input", initializeStaticValues);
+sueldoInput.addEventListener("input", initializeStaticValues);
+
+// Cargar valores guardados al cargar la página
+loadFromLocalStorage();
+updateStaticDisplay();
+
+</script>
+
+
+
+
+
+</body>
+</html>
